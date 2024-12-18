@@ -5,14 +5,19 @@ module.exports = {
   async getAirQualityData() {
     try {
       const randomNumber = Math.floor(Math.random() * (9000 - 100 + 1)) + 100;
-
       const locationResponse = await axios.get(`${OPENAQ_API_URL}${randomNumber}`, {
         headers: { "X-API-Key": OPENAQ_API_KEY }
       });
-
-      if (!locationResponse.data || !locationResponse.data.results || locationResponse.data.results.length === 0) {
-        throw new Error('Données de localisation introuvables');
+      while((!locationResponse.data || !locationResponse.data.results || locationResponse.data.results.length === 0))
+      {
+         locationResponse = await axios.get(`${OPENAQ_API_URL}${randomNumber}`, {
+          headers: { "X-API-Key": OPENAQ_API_KEY }
+        });
       }
+
+      // if (!locationResponse.data || !locationResponse.data.results || locationResponse.data.results.length === 0) {
+      //   throw new Error('Données de localisation introuvables');
+      // }
 
       const locality = locationResponse.data.results[0].locality || 'Inconnu';
       const country = locationResponse.data.results[0].country.name || 'Inconnu';

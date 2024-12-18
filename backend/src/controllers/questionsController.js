@@ -1,6 +1,5 @@
 const questionModel = require('../models/questionModel');
 const gameModel = require('../models/gameModel');
-const teamModel = require('../models/teamModel');
 
 const openaqService = require('../services/openaqService');
 const rawgService = require('../services/rawgService');
@@ -17,8 +16,11 @@ module.exports = {
       const selectingTeam = game.teams[game.currentTeamIndex];
       game.currentQuestionType = questionType;
       const question = await generateQuestion(questionType);
-      if (!question) {
-        return res.status(500).json({ error: 'Impossible de générer la question' });
+      // if (!question) {
+      //   return res.status(500).json({ error: 'Impossible de générer la question' });
+      // }
+      while (!question) {
+        question = await generateQuestion(questionType);
       }
 
       game.currentQuestion = question;

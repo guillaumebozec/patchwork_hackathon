@@ -8,6 +8,8 @@ function FinishedPage() {
 
   useEffect(() => {
     loadLeaderboard();
+    var audio = new Audio('../../sounds/ta-da_yrvBrlS.mp3');
+    audio.play();
   }, [id]);
 
   async function loadLeaderboard() {
