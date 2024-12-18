@@ -8,7 +8,11 @@ module.exports = {
     return newTeam;
   },
   updateScore: (teamId, points) => {
-    const team = teams.find(t => t.id === teamId);
+    console.log(teamId, points)
+    // const team = teams.find(t => t.id === teamId);
+    const team = teams[teamId];
+    console.log("teams : " +teams)
+    console.log("team : " + team)
     if(team) {
       console.log('Log : Ajout de', points, 'points à', team.name);
       team.score += points;

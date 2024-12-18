@@ -53,12 +53,13 @@ module.exports = {
       }
 
       const answeringTeamIndex = (game.currentTeamIndex + 1) % game.teams.length;
+      console.log('answeringTeamIndex', answeringTeamIndex);
       const answeringTeam = game.teams[answeringTeamIndex];
 
       let isCorrect = (answer === game.currentQuestion.correctAnswer);
 
       if (isCorrect) {
-        teamModel.updateScore(answeringTeam.id, 10); // +10 points par bonne réponse
+        gameModel.updateScore(gameId,answeringTeam.id, 10); // +10 points par bonne réponse
       } else {
       }
       delete game.currentQuestion;

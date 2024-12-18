@@ -58,5 +58,53 @@ module.exports = {
     }
 
     return game;
-  }
+  },
+  updateScore: (gameId, teamId, points) => {
+    console.log(gameId, teamId, points);
+    console.log("games : " + JSON.stringify(games, null, 2));
+  
+    // Trouver le jeu
+    // const game = games.find(g => g.id === gameId);
+    const game = games.find(g => g.id === Number(gameId));
+    if (!game) {
+      console.error(`Jeu introuvable avec l'ID ${gameId}`);
+      return null;
+    }
+  
+    // Trouver l'équipe
+    const team = game.teams.find(t => t.id === teamId);
+    if (!team) {
+      console.error(`Équipe introuvable avec l'ID ${teamId}`);
+      return null;
+    }
+  
+    console.log('Log : Ajout de', points, 'points à', team.name);
+    team.score += points;
+  
+    // Mettre à jour le jeu
+    module.exports.updateGame(gameId, game);
+  
+    console.log("GameModel mis à jour");
+    return team;
+  },
+
+  getLeaderboard: (gameId) => {
+    const game = games.find(g => g.id === gameId);
+    if (!game) {
+      console.error(`Jeu introuvable avec l'ID ${gameId}`);
+      return null;
+    }
+
+    // Créer le leaderboard basé sur les scores des équipes
+    const leaderboard = [...game.teams] // Copie pour éviter de modifier l'original
+      .sort((a, b) => b.score - a.score) // Tri décroissant par score
+      .map((team, index) => ({
+        rank: index + 1, // Ajouter le rang
+        id: team.id,
+        name: team.name,
+        score: team.score,
+      }));
+
+    return leaderboard;
+  },
 };
