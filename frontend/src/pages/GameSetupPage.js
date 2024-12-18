@@ -5,29 +5,44 @@ import { getGame, addTeam, startGame } from '../api/api';
 function GameSetupPage() {
   const { gameId } = useParams();
   const navigate = useNavigate();
-  
+
   const [game, setGame] = useState(null);
   const [teamName, setTeamName] = useState('');
-  const [refreshInterval, setRefreshInterval] = useState(null);
+  const [ClientTeamId, setClientTeamId] = useState(null);
 
   useEffect(() => {
-    loadGame();
-    const interval = setInterval(loadGame, 3000);
-    setRefreshInterval(interval);
+    const interval = setInterval(() => {
+      loadGame();
+    }, 3000);
+
     return () => clearInterval(interval);
   }, [gameId]);
 
+  useEffect(() => {
+    // Vérifie si le jeu est en cours et redirige si nécessaire
+    if (game && game.status === 'ongoing') {
+      if (ClientTeamId !== null) {
+        navigate(`/game/${game.id}?team=${ClientTeamId}`);
+      }
+    }
+  }, [game, ClientTeamId, navigate]);
+
   async function loadGame() {
-    const g = await getGame(gameId);
-    setGame(g);
-    if (g.status === 'ongoing') {
-      clearInterval(refreshInterval);
-    //   navigate(`/game/${g.id}?team=0`);
+    try {
+      const g = await getGame(gameId);
+      console.log('Données de la partie :', g);
+      setGame(g);
+    } catch (error) {
+      console.error('Erreur lors du chargement de la partie :', error);
     }
   }
 
   async function handleAddTeam() {
-    await addTeam(gameId, teamName);
+    const client = await addTeam(gameId, teamName);
+
+    const clientTeamIndex = client.teams.findIndex(t => t.name === teamName);
+    setClientTeamId(clientTeamIndex);
+
     setTeamName('');
     loadGame();
   }
@@ -35,25 +50,28 @@ function GameSetupPage() {
   async function handleStartGame() {
     const g = await startGame(gameId);
     setGame(g);
-    // Une fois démarré, on part sur la page du jeu
-    clearInterval(refreshInterval);
-    navigate(`/game/${g.id}?team=0`);
   }
 
   if (!game) return <div>Chargement...</div>;
-// if (!game.teams) return <div>En attente de données de la partie...</div>;
 
   return (
     <div>
       <h2>Partie #{game.id}</h2>
       <p>Status : {game.status}</p>
-      <h3>Équipes:</h3>
+      <h3>Équipes :</h3>
       <ul>
-        {game.teams && game.teams.map(t => <li key={t.id}>{t.name} - {t.score} points</li>)}
+        {game.teams && game.teams.map(t => (
+          <li key={t.id}>{t.name} - {t.score} points</li>
+        ))}
       </ul>
-      {(!game.teams || game.teams.length < 2  ) && (
+      {(!game.teams || game.teams.length < 2) && (
         <div>
-          <input type="text" placeholder="Nom de l'équipe" value={teamName} onChange={e=>setTeamName(e.target.value)}/>
+          <input
+            type="text"
+            placeholder="Nom de l'équipe"
+            value={teamName}
+            onChange={(e) => setTeamName(e.target.value)}
+          />
           <button onClick={handleAddTeam}>Ajouter l'équipe</button>
         </div>
       )}
