@@ -46,3 +46,20 @@ export async function getLeaderboardAPI(gameId) {
   const res = await fetch(`${API_BASE_URL}/questions/${gameId}/leaderboard`);
   return res.json();
 }
+export async function getLeaderboard(gameId) {
+  const game = await getGame(gameId); 
+  if (!game || !game.teams) {
+    throw new Error('Impossible de récupérer le leaderboard : Jeu introuvable ou sans équipes.');
+  }
+
+  const leaderboard = [...game.teams]
+    .sort((a, b) => b.score - a.score)
+    .map((team, index) => ({
+      rank: index + 1,
+      id: team.id,
+      name: team.name,
+      score: team.score,
+    }));
+
+  return { leaderboard };
+}

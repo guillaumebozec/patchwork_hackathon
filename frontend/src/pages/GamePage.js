@@ -15,24 +15,22 @@ function GamePage() {
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // État local pour la question courante
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [leaderboard, setLeaderboard] = useState(null);
   const [lastResult, setLastResult] = useState(null);
 
-  // Fetch régulier de l'état du jeu
   useEffect(() => {
     let interval = setInterval(() => {
       refreshGame();
     }, 3000);
-    refreshGame(); // premier fetch immédiat
+    refreshGame();
     return () => clearInterval(interval);
   }, [gameId]);
 
   async function refreshGame() {
     try {
       const g = await getGame(gameId);
-      console.log('Log : Données de la partie :', g); // Log des données
+      console.log('Log : Données de la partie :', g); 
       setGame(g);
       setLoading(false);
   
@@ -69,7 +67,6 @@ function GamePage() {
 
   async function handleSelectQuestion(questionType) {
     const result = await selectQuestion(gameId, questionType);
-    // La question est désormais dans le state du jeu (refreshGame s’en chargera)
     refreshGame();
   }
 
@@ -91,7 +88,6 @@ function GamePage() {
   let content;
 
   if (leaderboard && lastResult) {
-    // On affiche le résultat et le leaderboard
     content = (
       <div>
         <h3>Résultat : {lastResult === 'correct' ? 'Bonne réponse !' : 'Mauvaise réponse...'}</h3>
@@ -100,17 +96,13 @@ function GamePage() {
       </div>
     );
   } else if (!game.currentQuestion) {
-    // Pas de question en cours
     if (isChoosingTeam) {
-      // On choisit une question
       content = <QuestionSelector onSelect={handleSelectQuestion} />;
     } else {
       content = <div>En attente que l'autre équipe choisisse une question...</div>;
     }
   } else {
-    // Une question est en cours
     if (isAnsweringTeam) {
-      // On répond
       content = (
         <>
           <QuestionDisplay 
@@ -123,7 +115,6 @@ function GamePage() {
         </>
       );
     } else {
-      // Spectateur
       content = (
         <>
           <QuestionDisplay 
