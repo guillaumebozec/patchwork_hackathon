@@ -124,13 +124,17 @@ function Createam() {
 
                 <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   <label style={{ fontWeight: 'bold' }}>Quel est votre cri de guerre ?</label>
-                  <div className="sound-options" style={{ display: 'flex', gap: '20px' }}>
+                  <div className="sound-options" style={{ display: 'flex', gap: '20px' }} >
                     {[1,2,3].map(num => (
                       <button 
                         type="button"
                         key={num} 
                         className={`sound-button ${warCry === 'sound'+num ? 'selected' : ''}`} 
-                        onClick={() => canAddTeams && setWarCry('sound'+num)}
+                        onClick={() => {canAddTeams && setWarCry('sound'+num) ;var audio = new Audio('../../sounds/ahou-ahou-ahou.mp3');
+                          audio.play();}}
+                        onSelect={() => {
+                          
+                        }}
                         style={{
                           background: '#ff9fd3',
                           border: 'none',

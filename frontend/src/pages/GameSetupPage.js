@@ -52,7 +52,12 @@ function GameSetupPage() {
     setGame(g);
   }
 
-  if (!game) return <div>Chargement...</div>;
+  if (!game) 
+  {
+    var audio = new Audio('../../sounds/funny-sound-that-will-make-you-to-laugh_1.mp3');
+    audio.play();
+    return <div>Chargement...</div>;
+  }
 
   return (
     <div>
