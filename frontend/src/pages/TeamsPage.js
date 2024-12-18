@@ -1,3 +1,5 @@
+// PAGE PLUS UTILISÉE
+
 import React, { useEffect, useState } from 'react';
 import { getTeams, createTeam } from '../api/api';
 import TeamList from '../components/TeamList';

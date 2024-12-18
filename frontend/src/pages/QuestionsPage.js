@@ -1,3 +1,5 @@
+// PAGE PLUS UTILISÉE
+
 import React, { useEffect, useState } from 'react';
 import { getQuestions, createOpenAQQuestion, createRawgQuestion, createAnnQuestion } from '../api/api';
 import QuestionList from '../components/QuestionList';

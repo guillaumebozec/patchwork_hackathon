@@ -30,12 +30,21 @@ function GamePage() {
   }, [gameId]);
 
   async function refreshGame() {
-    const g = await getGame(gameId);
-    setGame(g);
-    setLoading(false);
-
-    if (g.status === 'finished') {
-      navigate(`/finished/${g.id}?team=${team}`);
+    try {
+      const g = await getGame(gameId);
+      console.log('Log : Données de la partie :', g); // Log des données
+      setGame(g);
+      setLoading(false);
+  
+      if (g.status === 'finished') {
+        navigate(`/finished/${g.id}?team=${team}`);
+      }
+      if (!g.currentQuestion) {
+        setLeaderboard(null);
+        setLastResult(null);
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'actualisation de la partie :', error);
     }
   }
 
@@ -65,12 +74,18 @@ function GamePage() {
   }
 
   async function handleSubmitAnswer() {
-    if(!selectedAnswer) return;
-    const result = await submitAnswer(gameId, selectedAnswer);
-    setLastResult(result.result);
-    setLeaderboard(result.leaderboard);
-    // Après avoir soumis la réponse, on attend le refresh pour voir le nouvel état
-    setSelectedAnswer(null);
+    if (!selectedAnswer) return;
+  
+    try {
+      const result = await submitAnswer(gameId, selectedAnswer);
+      console.log('Réponse soumise, résultat :', result);
+  
+      setLastResult(result.result);
+      setLeaderboard(result.leaderboard);
+      setSelectedAnswer(null);
+    } catch (error) {
+      console.error('Erreur lors de la soumission de la réponse :', error);
+    }
   }
 
   let content;
