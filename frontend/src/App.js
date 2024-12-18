@@ -5,16 +5,18 @@ import GameSetupPage from './pages/GameSetupPage';
 import GamePage from './pages/GamePage';
 import FinishedPage from './pages/FinishedPage';
 import Hometest from './pages/hometest';
+import Createam from './pages/Createam';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/setup/:gameId" element={<GameSetupPage />} />
+        <Route path="/setup/:gameId" element={<Createam />} />
         <Route path="/game/:gameId" element={<GamePage />} />
         <Route path="/finished/:id" element={<FinishedPage />} />
-        <Route path="/home" element={<Hometest />} />
+        <Route path="/home" element={<Hometest/>} />
+        <Route path="/createam/:gameId" element={<Createam/>} />
       </Routes>
     </Router>
   );

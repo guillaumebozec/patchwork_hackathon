@@ -105,7 +105,7 @@ body, html {
 
 .group-image {
   max-width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -136,4 +136,158 @@ body, html {
   border-radius: 4px;
   color: #000;
   margin-top: 20px;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background: #ff9fd3;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logo-box {
+  background: #ccc;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  background: #f9f9f9;
+}
+
+.left-section-form {
+  flex: 1;
+  background: #fff;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.part-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.left-section-form h1 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.team-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.color-options {
+  display: flex;
+  gap: 10px;
+}
+
+.color-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.color-box.selected {
+  border: 2px solid #000;
+}
+
+.sound-options {
+  display: flex;
+  gap: 20px;
+}
+
+.sound-button {
+  background: #ff9fd3;
+  border: none;
+  padding: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.sound-button.selected {
+  outline: 2px solid #000;
+}
+
+.icon-options {
+  display: flex;
+  gap: 20px;
+}
+
+.icon-button {
+  background: #ff9fd3;
+  border: none;
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.icon-button.selected {
+  outline: 2px solid #000;
+}
+
+.validate-button {
+  background: #ff9fd3;
+  border: none;
+  padding: 15px 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 4px;
+  color: #000;
+  align-self: flex-start;
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.group-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
 }
