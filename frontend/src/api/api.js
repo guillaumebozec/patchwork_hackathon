@@ -11,11 +11,11 @@ export async function getGame(gameId) {
   return res.json();
 }
 
-export async function addTeam(gameId, name) {
+export async function addTeam(gameId, name, color, warCry, icon) {
   const res = await fetch(`${API_BASE_URL}/games/${gameId}/teams`, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ name })
+    body: JSON.stringify({ name, color, warCry, icon })
   });
   return res.json();
 }

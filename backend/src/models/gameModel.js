@@ -33,7 +33,7 @@ module.exports = {
   },
   resetGames: () => { games = []; },
 
-  addTeamToGame: (gameId, teamName) => {
+  addTeamToGame: (gameId, teamName, teamColor, teamWarCry, teamIcon) => {
     const game = games.find(g => g.id === gameId);
     if (!game) return null;
 
@@ -47,7 +47,10 @@ module.exports = {
     const newTeam = {
       id: teamIdCounter++,
       name: teamName,
-      score: 0
+      score: 0,
+      color : teamColor,
+      warCry : teamWarCry,
+      icon : teamIcon,
     };
     game.teams.push(newTeam);
 
