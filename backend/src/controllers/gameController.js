@@ -64,10 +64,10 @@ module.exports = {
   
   addTeamToGame(req, res) {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, color, warCry, icon } = req.body;
     if(!name) return res.status(400).json({error: 'Le nom de l\'équipe est requis'});
 
-    const game = gameModel.addTeamToGame(parseInt(id), name);
+    const game = gameModel.addTeamToGame(parseInt(id), name, color, warCry, icon);
     if(!game) return res.status(404).json({error: 'Partie introuvable'});
     
     res.json(game);

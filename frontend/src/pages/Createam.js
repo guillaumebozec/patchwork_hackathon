@@ -44,19 +44,19 @@ function Createam() {
     e.preventDefault();
     const newTeamData = {
       name: teamName,
-    //   color: teamColor,
-    //   warCry: warCry,
-    //   icon: teamIcon
+      color: teamColor,
+      warCry: warCry,
+      icon: teamIcon
     };
-    const client = await addTeam(gameId, teamName);
+    const client = await addTeam(gameId, teamName, teamColor, warCry, teamIcon);
 
     const clientTeamIndex = client.teams.findIndex(t => t.name === teamName);
     setClientTeamId(clientTeamIndex);
 
     setTeamName('');
-    // setTeamColor('');
-    // setWarCry('');
-    // setTeamIcon('');
+    setTeamColor('');
+    setWarCry('');
+    setTeamIcon('');
     loadGame();
   }
 
