@@ -165,23 +165,63 @@ async function generateRawgQuestion() {
   };
 }
 
+const axios = require('axios');
+const xml2js = require('xml2js');
+
+async function getAnimeDetails(animeId) {
+  const url = `https://cdn.animenewsnetwork.com/encyclopedia/api.xml?anime=${animeId}`;
+  try {
+    const response = await axios.get(url);
+    const result = await xml2js.parseStringPromise(response.data);
+    return result;
+  } catch (error) {
+    console.error(`Erreur lors de la récupération des détails de l'anime ${animeId} :`, error);
+    return null; // Renvoie null si une erreur se produit
+  }
+}
+
+async function getValidAnime(id) {
+  let anime = await getAnimeDetails(id);
+  while (!anime || !anime.ann.anime || anime.ann.anime.length === 0) {
+    console.warn(`Anime avec ID ${id} non valide, génération d'un nouvel ID...`);
+    id = Math.floor(Math.random() * (12000 - 1 + 1)) + 1;
+    anime = await getAnimeDetails(id);
+  }
+  return anime;
+}
+
 async function generateAnnQuestion() {
-  const data = await annService.getAnimeData();
-  const anime1 = {name: 'X', date: '1995-04-01'};
-  const anime2 = {name: 'Y', date: '1998-07-12'};
-  
+  const [animeId1, animeId2] = await getRandomAnimeIds();
+
+  const anime1 = await getValidAnime(animeId1);
+  const anime2 = await getValidAnime(animeId2);
+
+  const anime1Name = anime1.ann.anime[0].$.name || 'Inconnu';
+  const anime2Name = anime2.ann.anime[0].$.name || 'Inconnu';
+
+  const anime1DateInfo = anime1.ann.anime[0].info.find(info => info.$.type === 'Vintage');
+  const anime2DateInfo = anime2.ann.anime[0].info.find(info => info.$.type === 'Vintage');
+
+  if (!anime1DateInfo || !anime2DateInfo) {
+    console.error('Impossible de récupérer les dates des animes.');
+    return null;
+  }
+
+  const anime1Date = new Date(anime1DateInfo._);
+  const anime2Date = new Date(anime2DateInfo._);
+
   let correctAnswer;
-  if (new Date(anime1.date) < new Date(anime2.date)) {
-    correctAnswer = anime1.name;
+  if (anime1Date < anime2Date) {
+    correctAnswer = anime1Name;
   } else {
-    correctAnswer = anime2.name;
+    correctAnswer = anime2Name;
   }
 
   return {
     type: 'ann',
     question: 'Quel anime est sorti en premier ?',
     correctAnswer: correctAnswer,
-    options: [anime1.name, anime2.name]
+    options: [anime1Name, anime2Name]
   };
 }
 
@@ -189,4 +229,18 @@ function getLeaderboard(game) {
   const teams = game.teams.map(t => ({name: t.name, score: t.score}));
   teams.sort((a, b) => b.score - a.score);
   return teams;
+}
+
+async function getRandomAnimeIds() {
+  const minId = 1; // ID minimal connu pour les animes
+  const maxId = 12000; // Ajustez selon les IDs disponibles
+  const randomId1 = Math.floor(Math.random() * (maxId - minId + 1)) + minId;
+  let randomId2 = Math.floor(Math.random() * (maxId - minId + 1)) + minId;
+
+  // Assurez-vous que les deux IDs sont différents
+  while (randomId2 === randomId1) {
+    randomId2 = Math.floor(Math.random() * (maxId - minId + 1)) + minId;
+  }
+
+  return [randomId1, randomId2];
 }
