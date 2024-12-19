@@ -6,6 +6,7 @@ import GamePage from './pages/GamePage';
 import FinishedPage from './pages/FinishedPage';
 import Hometest from './pages/hometest';
 import Createam from './pages/Createam';
+import Gamequestion from './pages/Gamequestion';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/finished/:id" element={<FinishedPage />} />
         <Route path="/home" element={<Hometest/>} />
         <Route path="/createam/:gameId" element={<Createam/>} />
+        <Route path="/gamequestion/:gameId" element={<Gamequestion/>}/>
       </Routes>
     </Router>
   );
