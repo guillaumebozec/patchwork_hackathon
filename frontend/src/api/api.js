@@ -1,5 +1,3 @@
-// const API_BASE_URL = 'http://10.134.199.218:3001/api'
-// const API_BASE_URL = 'http://192.168.1.21:3001/api';
 const API_BASE_URL = 'http://localhost:3001/api';
 
 export async function createGame() {
