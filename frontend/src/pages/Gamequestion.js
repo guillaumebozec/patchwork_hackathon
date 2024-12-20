@@ -144,10 +144,12 @@ function Gamequestion() {
   return (
     <div className="container" style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: '0', padding: '0', fontFamily: 'sans-serif' }}>
       {/* Header */}
-      <header className="header" style={{ background: '#ff9fd3', padding: '20px', display: 'flex', alignItems: 'center' }}>
-        <div className="logo-box" style={{ background: '#ccc', padding: '10px 20px', fontWeight: 'bold', borderRadius: '4px' }}>
-          Logo
-        </div>
+      <header className="header" style={{ background: '#ff9fd3', padding: '20px', display: 'flex' }}>
+        <img
+          src="../../logo.png"
+          alt="Logo"
+          className="logo-box" style={{ width: "50px", background: '#ccc', fontWeight: 'bold', borderRadius: '4px' }}
+        />
       </header>
 
       {/* Main content */}
@@ -165,16 +167,21 @@ function Gamequestion() {
                     padding: '10px',
                     borderRadius: '10px',
                     textAlign: 'center',
-                    backgroundColor: index === team ? '#d1ffd8' : '#f0f0f0',
+                    // backgroundColor: index === team ? '#d1ffd8' : '#f0f0f0',
+                    // backgroundColor: "index === team ? '#d1ffd8' : '#f0f0f0'",
+                    backgroundColor : t.color,
                     transition: 'border-color 0.3s ease',
                   }}
                 >
                   {t.icon && (
-                    <img
-                      src={t.icon}
-                      alt={`Icône de l'équipe ${index}`}
-                      style={{ width: '60px', height: '60px', marginBottom: '10px', borderRadius: '50%' }}
-                    />
+                    // <img
+                    //   src={t.icon}
+                    //   alt={`Icône de l'équipe ${index}`}
+                    //   
+                    // />
+                    <div style={{ width: '150px', height: '60px', marginBottom: '10px', borderRadius: '50%', justifyContent:'center', alignItems:'center', display:'flex', margin: '0 auto' }}>
+                      <p style={{ fontSize: '1.5rem', lineHeight: '60px', textAlign: 'center' }}>{t.icon}</p>
+                    </div>
                   )}
                   <p style={{ fontWeight: 'bold' }}>Équipe #{index + 1}</p>
                   <p style={{ fontSize: '0.9rem', marginTop: '5px' }}>{t.name}</p>
