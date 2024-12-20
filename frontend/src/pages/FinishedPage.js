@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getLeaderboard } from '../api/api';
 
 function FinishedPage() {
   const { id } = useParams();
   const [leaderboard, setLeaderboard] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadLeaderboard();
@@ -65,6 +66,25 @@ function FinishedPage() {
           </table>
         )}
       </main>
+
+      {/* Button to go back */}
+      <footer className="footer" style={{ padding: '20px', textAlign: 'center', background: '#ff9fd3' }}>
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            padding: '10px 20px',
+            fontSize: '1rem',
+            color: '#fff',
+            background: '#333',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          Retour à l'accueil
+        </button>
+      </footer>
     </div>
   );
 }
