@@ -31,10 +31,10 @@ function Gamequestion() {
   async function refreshGame() {
     try {
       const g = await getGame(gameId);
-      console.log('Log : Données de la partie :', g); 
+      console.log('Log : Données de la partie :', g);
       setGame(g);
       setLoading(false);
-  
+
       if (g.status === 'finished') {
         navigate(`/finished/${g.id}?team=${team}`);
       }
@@ -54,11 +54,19 @@ function Gamequestion() {
 
   async function handleSubmitAnswer() {
     if (!selectedAnswer) return;
-  
+
     try {
       const result = await submitAnswer(gameId, selectedAnswer);
       console.log('Réponse soumise, résultat :', result);
-  
+
+      if (result.result === 'correct') {
+        const audio = new Audio('../../sounds/crowd_small_chil_ec049202_9klCwI6.mp3');
+        audio.play();
+      } else {
+        const audio = new Audio('../../sounds/error_CDOxCYm.mp3');
+        audio.play();
+      }
+
       setLastResult(result.result);
       setLeaderboard(result.leaderboard);
       setSelectedAnswer(null);
@@ -67,59 +75,67 @@ function Gamequestion() {
     }
   }
 
-  if (loading) return <div>Chargement...</div>;
-  if (!game) return <div>Partie introuvable</div>;
+  if (loading || !game) {
+    return <div>Chargement en cours...</div>;
+  }
 
-  const isChoosingTeam = (team === game.currentTeamIndex);
+  if (!game) {
+    return <div>Partie introuvable</div>;
+  }
+
+  const isChoosingTeam = team === game.currentTeamIndex;
   const answeringTeamIndex = (game.currentTeamIndex + 1) % game.teams.length;
-  const isAnsweringTeam = (team === answeringTeamIndex);
+  const isAnsweringTeam = team === answeringTeamIndex;
 
   let content;
 
   if (leaderboard && lastResult) {
     content = (
       <div>
-        <h3>Résultat : {lastResult === 'correct' ? 'Bonne réponse !' : 'Mauvaise réponse...'}</h3>
+        <h3>Résultat : {lastResult === 'correct' ? 'Bonne réponse ! 🎉' : 'Mauvaise réponse... ❌'}</h3>
         <Leaderboard leaderboard={leaderboard} />
         <p>La partie va continuer, patientez...</p>
       </div>
     );
   } else if (!game.currentQuestion) {
-    // Pas de question courante => l’équipe au tour doit choisir
     if (isChoosingTeam) {
       content = (
         <div style={{ marginTop: '30px' }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>Choisissez une question :</h1>
+          <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>C'est à votre tour de choisir une question :</h1>
           <QuestionSelector onSelect={handleSelectQuestion} />
         </div>
       );
     } else {
-      content = <div style={{ marginTop: '30px' }}>En attente que l'autre équipe choisisse une question...</div>;
+      content = (
+        <div style={{ marginTop: '30px' }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>En attente que l'autre équipe choisisse une question...</h1>
+        </div>
+      );
     }
   } else {
-    // Il y a une question => l’autre équipe doit répondre
     if (isAnsweringTeam) {
       content = (
         <div style={{ marginTop: '30px' }}>
-          <QuestionDisplay 
-            question={game.currentQuestion} 
+          <h2 style={{ fontSize: '1.6rem', marginBottom: '20px' }}>Répondez à la question sélectionnée :</h2>
+          <QuestionDisplay
+            question={game.currentQuestion}
             isAnsweringTeam={true}
             selectedAnswer={selectedAnswer}
-            onSelectAnswer={setSelectedAnswer} 
+            onSelectAnswer={setSelectedAnswer}
           />
-          <AnswerForm onSubmit={handleSubmitAnswer} disabled={!selectedAnswer}/>
+          <AnswerForm onSubmit={handleSubmitAnswer} disabled={!selectedAnswer} />
         </div>
       );
     } else {
       content = (
         <div style={{ marginTop: '30px' }}>
-          <QuestionDisplay 
-            question={game.currentQuestion} 
+          <h2 style={{ fontSize: '1.6rem', marginBottom: '20px' }}>L'autre équipe est en train de répondre...</h2>
+          <QuestionDisplay
+            question={game.currentQuestion}
             isAnsweringTeam={false}
             selectedAnswer={null}
-            onSelectAnswer={()=>{}}
+            onSelectAnswer={() => {}}
           />
-          <p>L'autre équipe est en train de répondre...</p>
         </div>
       );
     }
@@ -133,50 +149,49 @@ function Gamequestion() {
           Logo
         </div>
       </header>
-      
+
       {/* Main content */}
       <main className="main-content" style={{ display: 'flex', flex: 1, background: '#f9f9f9' }}>
         {/* Left section */}
         <div className="left-section-form" style={{ flex: 1, background: '#fff', padding: '40px', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
-          <p className="part-title" style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '10px' }}>Partie #{game.id}</p>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '20px' }}>Accueil de la partie</h2>
-          <p>Vous êtes l'équipe : {team}</p>
-          <p>C'est le tour de l'équipe {game.currentTeamIndex}</p>
-
-          <h3 style={{ marginTop: '20px' }}>Équipes :</h3>
-          <div style={{ display: 'flex', gap: '20px', marginTop: '10px', flexWrap: 'wrap' }}>
-            {game.teams && game.teams.map((t, index) => (
-              <div key={t.id} style={{ 
-                border: '2px solid #000', 
-                borderRadius: '8px', 
-                padding: '20px', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                minWidth: '120px'
-              }}>
-                {/* Carré de couleur représentant l'équipe */}
-                <div style={{ 
-                  width: '60px', 
-                  height: '60px', 
-                  background: t.color || '#ccc', 
-                  marginBottom: '10px' 
-                }}></div>
-                <p style={{ fontSize: '0.9rem', textAlign: 'center' }}>équipe {index + 1} : {t.name}</p>
-              </div>
-            ))}
+          <div style={{ margin: '20px 0' }}>
+            <h3 style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '10px' }}>Équipes</h3>
+            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {game.teams.map((t, index) => (
+                <div
+                  key={t.id}
+                  style={{
+                    border: `2px solid ${index === game.currentTeamIndex ? '#ff9fd3' : 'transparent'}`,
+                    padding: '10px',
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    backgroundColor: index === team ? '#d1ffd8' : '#f0f0f0',
+                    transition: 'border-color 0.3s ease',
+                  }}
+                >
+                  {t.icon && (
+                    <img
+                      src={t.icon}
+                      alt={`Icône de l'équipe ${index}`}
+                      style={{ width: '60px', height: '60px', marginBottom: '10px', borderRadius: '50%' }}
+                    />
+                  )}
+                  <p style={{ fontWeight: 'bold' }}>Équipe #{index + 1}</p>
+                  <p style={{ fontSize: '0.9rem', marginTop: '5px' }}>{t.name}</p>
+                </div>
+              ))}
+            </div>
           </div>
-
           {content}
         </div>
-        
+
         {/* Right section (image) */}
         <div className="right-section" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-          <img 
-            src={groupImage} 
-            alt="Groupe de personnes" 
-            className="group-image" 
-            style={{ maxWidth: '100%', height: 'auto', objectFit: 'cover' }} 
+          <img
+            src={groupImage}
+            alt="Groupe de personnes"
+            className="group-image"
+            style={{ maxWidth: '100%', height: '100%', objectFit: 'cover' }}
           />
         </div>
       </main>

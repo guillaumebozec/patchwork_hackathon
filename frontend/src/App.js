@@ -12,9 +12,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Hometest />} />
         <Route path="/setup/:gameId" element={<Createam />} />
-        <Route path="/game/:gameId" element={<GamePage />} />
+        <Route path="/game/:gameId" element={<Gamequestion/>} />
         <Route path="/finished/:id" element={<FinishedPage />} />
         <Route path="/home" element={<Hometest/>} />
         <Route path="/createam/:gameId" element={<Createam/>} />
